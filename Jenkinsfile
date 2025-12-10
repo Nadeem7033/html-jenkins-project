@@ -18,25 +18,27 @@ pipeline {
         stage('Test') {
             steps {
                 echo "Testing HTML files..."
-                sh 'ls -l'
+                bat """
+                echo Checking files...
+                dir
+                """
             }
         }
 
         stage('Deploy') {
             steps {
-                echo "Deploying HTML website to /var/www/html-jenkins"
-                sh '''
-                    rm -rf /var/www/html-jenkins || true
-                    mkdir -p /var/www/html-jenkins
-                    cp -r * /var/www/html-jenkins
-                '''
+                echo "Deploying website..."
+                bat """
+                if not exist C:\\deploy mkdir C:\\deploy
+                xcopy /s /y * C:\\deploy\\
+                """
             }
         }
     }
 
     post {
         success {
-            echo "🎉 Deployment Successful!"
+            echo "✔ Deployment Successful!"
         }
         failure {
             echo "❌ Deployment Failed!"
